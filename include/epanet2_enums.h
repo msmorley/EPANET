@@ -17,6 +17,7 @@
 #ifndef EPANET2_ENUMS_H
 #define EPANET2_ENUMS_H
 
+#undef EN_LINK
 
 // --- Define the EPANET toolkit constants
 
@@ -161,7 +162,7 @@ The types of objects that comprise a network model.
 */
 typedef enum {
     EN_NODE    = 0,     //!< Nodes
-    EN_LINK    = 1,     //!< Links
+	EN_LINK    = 1,     //!< Links
     EN_TIMEPAT = 2,     //!< Time patterns
     EN_CURVE   = 3,     //!< Data curves
     EN_CONTROL = 4,     //!< Simple controls
