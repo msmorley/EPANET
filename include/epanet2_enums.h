@@ -27,7 +27,7 @@ Limits on the size of character arrays used to store ID names
 and text messages.
 */
 typedef enum {
-  EN_MAXID   = 31,     //!< Max. # characters in ID name
+  EN_MAXID   = 255,     //!< Max. # characters in ID name
   EN_MAXMSG  = 255     //!< Max. # characters in message text
 } EN_SizeLimits;
 
