@@ -137,8 +137,8 @@ int juncdata(Project *pr)
 
     // Create a demand for the junction and use NodeDemand as an indicator
     // to be used when processing demands from the [DEMANDS] section
-    if (!adddemand(node, d, p, NULL)) return 101;
-    hyd->NodeDemand[njuncs] = d;
+	if (!adddemand(node, d, p, NULL)) return 101;
+	hyd->NodeDemand[njuncs] = d;
     
     // Return error code
     if (errcode > 0) return setError(parser, errtok, errcode);
@@ -902,8 +902,8 @@ int demanddata(Project *pr)
     }
 
     // Otherwise add new demand to junction
-    else if (!adddemand(&net->Node[j], y, p, parser->Comment) > 0) return 101;
-    return 0;
+	else if (adddemand(&net->Node[j], y, p, parser->Comment) == FALSE) return 101;
+	return 0;
 }
 
 int controldata(Project *pr)

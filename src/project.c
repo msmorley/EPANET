@@ -138,13 +138,14 @@ int openfiles(Project *pr, const char *f1, const char *f2, const char *f3)
     {
         if ((pr->parser.InFile = fopen(f1, "rt")) == NULL) return 302;
     }
-    if (strlen(f2) == 0) pr->report.RptFile = stdout;
-    else
+	if (strlen(f2) == 0)
+		pr->report.RptFile = 0;
+	else
     {
         pr->report.RptFile = fopen(f2, "wt");
         if (pr->report.RptFile == NULL) return 303;
     }
-    writelogo(pr);
+//    writelogo(pr);
     return 0;
 }
 
