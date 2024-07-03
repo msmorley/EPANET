@@ -355,6 +355,20 @@ int DLLEXPORT ENgetnodevalue(int index, int property, EN_API_FLOAT_TYPE *value)
     return errcode;
 }
 
+int DLLEXPORT ENgetnodevalues(int property, EN_API_FLOAT_TYPE *values)
+{
+    int i, errcode = 0;
+    EN_API_FLOAT_TYPE value;
+    
+    for (i = 1; i <= _defaultProject->network.Nnodes; i++)
+    {
+        errcode = ENgetnodevalue(i, property, &value);
+        values[i-1] = value;
+        if (errcode != 0) return errcode;
+    }
+    return 0;
+}
+
 int DLLEXPORT ENsetnodevalue(int index, int property, EN_API_FLOAT_TYPE value)
 {
     return EN_setnodevalue(_defaultProject, index, property, value);
@@ -522,6 +536,19 @@ int DLLEXPORT ENgetlinkvalue(int index, int property, EN_API_FLOAT_TYPE *value)
     int errcode = EN_getlinkvalue(_defaultProject, index, property, &v);
     *value = (EN_API_FLOAT_TYPE)v;
     return errcode;
+}
+int DLLEXPORT ENgetlinkvalues(int property, EN_API_FLOAT_TYPE *values)
+{
+    int i, errcode = 0;
+    EN_API_FLOAT_TYPE value;
+    
+    for (i = 1; i <= _defaultProject->network.Nlinks; i++)
+    {
+        errcode = ENgetlinkvalue(i, property, &value);
+        values[i-1] = value;
+        if (errcode != 0) return errcode;
+    }
+    return 0;
 }
 
 int DLLEXPORT ENsetlinkvalue(int index, int property, EN_API_FLOAT_TYPE value)
