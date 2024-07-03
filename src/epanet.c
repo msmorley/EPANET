@@ -2358,6 +2358,26 @@ int DLLEXPORT EN_getnodevalue(EN_Project p, int index, int property, double *val
     return 0;
 }
 
+int DLLEXPORT EN_getnodevalues(EN_Project p, int property, double *values)
+/*----------------------------------------------------------------
+**  Input:   property = node property code (see EN_NodeProperty)
+**  Output:  values = array of node property values
+**  Returns: error code
+**  Purpose: retrieves an array of node property values
+**----------------------------------------------------------------
+*/
+{
+    int status = 0, i = 0;
+
+    for (i = 1; i <= p->network.Nnodes; i++)
+    {
+        status = EN_getnodevalue(p, i, property, &values[i - 1]);
+        // if status is not 0, return the error code
+        if (status != 0) { return status; }
+    }
+    return 0;
+}
+
 int DLLEXPORT EN_setnodevalue(EN_Project p, int index, int property, double value)
 /*----------------------------------------------------------------
 **  Input:   index = node index
@@ -2429,6 +2449,7 @@ int DLLEXPORT EN_setnodevalue(EN_Project p, int index, int property, double valu
         if (value < 0.0) return 209;
         if (value > 0.0) value = pow((Ucf[FLOW] / value), hyd->Qexp) / Ucf[PRESSURE];
         Node[index].Ke = value;
+        if (hyd->EmitterFlow[index] == 0.0) hyd->EmitterFlow[index] = 1.0;
         break;
 
     case EN_INITQUAL:
@@ -3408,6 +3429,12 @@ int DLLEXPORT EN_deletelink(EN_Project p, int index, int actionCode)
         if (net->Valve[i].Link > index) net->Valve[i].Link -= 1;
     }
 
+    // Reduce the number of pipes count by one if it is a pipe.
+    if (linkType == PIPE)
+    {
+        net->Npipes--;
+    }
+
     // Delete any pump associated with the deleted link
     if (linkType == PUMP)
     {
@@ -3900,6 +3927,25 @@ int DLLEXPORT EN_getlinkvalue(EN_Project p, int index, int property, double *val
         return 251;
     }
     *value = (double)v;
+    return 0;
+}
+
+int DLLEXPORT EN_getlinkvalues(EN_Project p, int property, double *values)
+/*----------------------------------------------------------------
+**  Input:   property = link property code (see EN_LinkProperty)
+**  Output:  values = array of link property values
+**  Returns: error code
+**  Purpose: retrieves property values for all links
+**----------------------------------------------------------------
+*/
+{
+    int status = 0, i = 0;
+    for(i = 1; i <= p->network.Nlinks; i++)
+    {
+        status = EN_getlinkvalue(p, i, property, &values[i-1]);
+        // If an error occurs, return the error code
+        if(status != 0) { return status; }
+    }
     return 0;
 }
 
