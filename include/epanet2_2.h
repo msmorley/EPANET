@@ -212,6 +212,8 @@ typedef struct Project *EN_Project;
   */
   int DLLEXPORT EN_close(EN_Project ph);
 
+  int DLLEXPORT EN_removeprealloc(EN_Project ph);
+
   /********************************************************************
 
   Hydraulic Analysis Functions
@@ -813,6 +815,8 @@ typedef struct Project *EN_Project;
 
   When a new node is created all of its properties (see @ref EN_NodeProperty) are set to 0.
   */
+  int DLLEXPORT EN_preallocnodes(EN_Project p, int Nnodes);
+
   int DLLEXPORT EN_addnode(EN_Project ph, const char *id, int nodeType, int *out_index);
 
   /**
@@ -1153,6 +1157,9 @@ typedef struct Project *EN_Project;
 
   See @ref EN_LinkProperty.
   */
+
+  int DLLEXPORT EN_prealloclinks(EN_Project p, int Nlinks);
+
   int DLLEXPORT EN_addlink(EN_Project ph, const char *id, int linkType, const char *fromNode,
                           const char *toNode, int *out_index);
 

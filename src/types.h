@@ -903,7 +903,8 @@ typedef struct Project {
 
   int
     Openflag,                    // Project open flag
-    Warnflag;                    // Warning flag
+    Warnflag,                    // Warning flag
+    Preallocflag;                // Preallocated memory flag for nodes and links
 
   char
     Msg[MAXMSG+1],               // General-purpose string: errors, messages
