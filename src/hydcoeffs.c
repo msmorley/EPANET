@@ -1,7 +1,7 @@
 /*
  ******************************************************************************
  Project:      OWA EPANET
- Version:      2.2
+ Version:      2.3
  Module:       hydcoeffs.c
  Description:  computes coefficients for a hydraulic solution matrix
  Authors:      see AUTHORS
@@ -507,7 +507,7 @@ void emitterheadloss(Project *pr, int i, double *hloss, double *hgrad)
 **   Input:   i = node index
 **   Output:  hloss = head loss across node's emitter
 **            hgrad = head loss gradient
-**   Purpose: computes an emitters's head loss and gradient.
+**   Purpose: computes an emitter's head loss and gradient.
 **-------------------------------------------------------------
 */
 {

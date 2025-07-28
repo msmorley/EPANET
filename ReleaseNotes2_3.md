@@ -14,17 +14,20 @@ This document describes the changes and updates that have been made in version 2
    - `EN_LEAK_AREA` and `EN_LEAK_EXPAN` can be used with the functions `EN_getlinkvalue` and `EN_setlinkvalue` to retrieve and assign values for a pipe's leak area and expansion properties.
    - `EN_LINK_LEAKAGE` can be used with `EN_getlinkvalue` to retrieve a pipe's leakage rate at a given point in time.
    - `EN_LEAKAGEFLOW` can be used with `EN_getnodevalue` to retrieve the leakage demand generated at a node from all its connecting pipes at a given point in time.
-   - `EN_LEAKAGELOSS` can be used with `EN_getstatistic` to retrieve the the total leakage loss in the system at a given point in time as a percentage of total flow entering the system.
+   - `EN_LEAKAGELOSS` can be used with `EN_getstatistic` to retrieve the total leakage loss in the system at a given point in time as a percentage of total flow entering the system.
 
  - Support has been added for reading the `[TAGS]` section of an EPANET input file. In addition:
    - A newly added `EN_settag` function will assign a Tag to a node or link.
    - A newly added `EN_gettag` function will retrieve a node or link's Tag.
-   - The exisitng `EN_saveinpfile` will include saving all node and link tags to file.
- - A new Flow Balance Report has been added to end of a simulation run's Status Report that lists the various components of the system's total inflow and outflow over the simulation period. It also displays the ratio of outflow to inflow as a check on flow continuity.
+   - The existing `EN_saveinpfile` will include saving all node and link tags to file.
+ 
+ - A new Flow Balance Report has been added to the end of a simulation run's Status Report that lists the various components of the system's total inflow and outflow over the simulation period. It also displays the ratio of outflow to inflow as a check on flow continuity.
 
  - A new type of valve, a Positional Control Valve (PCV), was added. It uses a valve characteristic curve to relate its loss coefficient to a percentage open setting (parameter - `EN_PCV`).
 
  - `EN_VALVE_CURVE` can now be used with the `EN_getcurvetype` and `EN_setcurvetype` to get or set the valve position curve.
+
+ - `EN_VALVE_TYPE` can now be used with `EN_getlinkvalue` and `EN_setlinkvalue` to get and set a valve's type. This is the preferred way to change just a valve's type rather than using `EN_setlinktype`.
 
  - A new set of functions has been added to get information about upcoming time step events. Users will now see what type of event is going to cause the end of a time step to occur. See `EN_timetonextevent`.
 
@@ -38,7 +41,9 @@ This document describes the changes and updates that have been made in version 2
 
  - `EN_STATUS_REPORT` can now be used with `EN_getoption` and `EN_setoption` to get or set the type of status report that EPANET will generate (`EN_NO_REPORT`, `EN_NORMAL_REPORT` or `EN_FULL_REPORT`).  
 
- - `EN_PRESS_UNITS` can now be used with `EN_getoption` and `EN_setoption` to get or set the pressure unit used in EPANET.
+ - `EN_PRESS_UNITS` can now be used with `EN_getoption` and `EN_setoption` to get or set a project's pressure units. The choices are EN_PSI, EN_KPA, EN_METERS, EN_BAR, or EN_FEET.
+
+ - Pressure units have been decoupled from the flow unit system, allowing them to be set independently to support mixed-unit conventions (e.g., using LPS for flow and PSI for pressure). 
 
  - The following constants can be used with EN_getnodevalue to retrieve the components of a node's total demand at a given point in time:
    - `EN_FULLDEMAND` - the consumer demand requested
@@ -80,7 +85,7 @@ This document describes the changes and updates that have been made in version 2
 
  - Improved checks to prevent outflow from empty tanks or inflow to full (non-overflow) tanks, including the case where a link is connected to a pair of tanks, were added.
 
- - The `EN_INITSETTING` option in function `EN_getlinkvalue` will now return `EN_MISSING` for a valve whose initial status is fixed to `EN_OPEN` or `EN_CLOSED`.
+ - The `EN_INITSETTING` option in function `EN_setlinkvalue` will now save the setting value so that if a new simulation is begun or if  `EN_saveinpfile` is called the saved initial setting will remain in effect rather than whatever setting a simulation may have ended with.
 
  - A new error code `263 - node is not a tank` is returned when `EN_settankdata` or `EN_setnodevalue` attempts to set a tank-only parameter for a non-tank node.
 
