@@ -17,6 +17,8 @@
 #ifndef EPANET2_ENUMS_H
 #define EPANET2_ENUMS_H
 
+#undef EN_LINK
+
 // --- Define the EPANET toolkit constants
 /// Character array size limits
 /*! \enum EN_SizeLimits
@@ -24,7 +26,7 @@
  * and text messages.
 */
 typedef enum {
-  EN_MAXID   = 31,     //!< Max. # characters in ID name
+  EN_MAXID   = 255,     //!< Max. # characters in ID name
   EN_MAXMSG  = 255     //!< Max. # characters in message text
 } EN_SizeLimits;
 

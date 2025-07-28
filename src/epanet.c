@@ -47,6 +47,10 @@ int DLLEXPORT EN_createproject(EN_Project *p)
     getTmpName(project->TmpHydFname);
     getTmpName(project->TmpOutFname);
     getTmpName(project->TmpStatFname);
+    
+    // initalize the memory preallocation flag
+    project->Preallocflag= 0;    
+    
     *p = project;
     return 0;
 }
@@ -386,6 +390,16 @@ int DLLEXPORT EN_close(EN_Project p)
     p->quality.OpenQflag = FALSE;
     p->outfile.SaveQflag = FALSE;
     return 0;
+}
+
+int DLLEXPORT EN_removeprealloc(EN_Project ph)
+/*----------------------------------------------------------------
+**  Returns: error code
+**  Purpose: removes memory preallocation flag
+**----------------------------------------------------------------
+*/
+{
+    ph->Preallocflag= 0;
 }
 
 /********************************************************************
@@ -1893,6 +1907,34 @@ int DLLEXPORT EN_setqualtype(EN_Project p, int qualType, const char *chemName,
 
 ********************************************************************/
 
+
+int DLLEXPORT EN_preallocnodes(EN_Project p, int Nnodes)
+/*----------------------------------------------------------------
+**  Input:   Nnodes = number of nodes to preallocate memory for
+**  Returns: error code
+**  Purpose: reserves memory in advance for programatically created nodes
+**----------------------------------------------------------------
+*/
+{
+    p->Preallocflag= 1;
+    Network  *net = &p->network;
+    Hydraul  *hyd = &p->hydraul;
+    Quality  *qual = &p->quality;
+
+    // Grow node-related arrays to accomodate required number of nodes
+    int size = (Nnodes + 2) * sizeof(Snode);
+    net->Node = (Snode *)realloc(net->Node, size);
+
+    size = (Nnodes + 2) * sizeof(double);
+    hyd->NodeDemand = (double *)realloc(hyd->NodeDemand, size);
+    qual->NodeQual = (double *)realloc(qual->NodeQual, size);
+    hyd->NodeHead = (double *)realloc(hyd->NodeHead, size);
+    hyd->FullDemand = (double *)realloc(hyd->FullDemand, size);
+    hyd->EmitterFlow = (double *)realloc(hyd->EmitterFlow, size);
+    hyd->LeakageFlow = (double *)realloc(hyd->LeakageFlow, size);
+    hyd->DemandFlow = (double *)realloc(hyd->DemandFlow, size);
+}
+
 int DLLEXPORT EN_addnode(EN_Project p, const char *id, int nodeType, int *index)
 /*----------------------------------------------------------------
 **  Input:   id = node ID name
@@ -1927,16 +1969,19 @@ int DLLEXPORT EN_addnode(EN_Project p, const char *id, int nodeType, int *index)
     if (nodeType < EN_JUNCTION || nodeType > EN_TANK) return 251;
 
     // Grow node-related arrays to accommodate the new node
-    size = (net->Nnodes + 2) * sizeof(Snode);
-    net->Node = (Snode *)realloc(net->Node, size);
-    size = (net->Nnodes + 2) * sizeof(double);
-    hyd->NodeDemand = (double *)realloc(hyd->NodeDemand, size);
-    qual->NodeQual = (double *)realloc(qual->NodeQual, size);
-    hyd->NodeHead = (double *)realloc(hyd->NodeHead, size);
-    hyd->FullDemand = (double *)realloc(hyd->FullDemand, size);
-    hyd->EmitterFlow = (double *)realloc(hyd->EmitterFlow, size);
-    hyd->LeakageFlow = (double *)realloc(hyd->LeakageFlow, size);
-    hyd->DemandFlow = (double *)realloc(hyd->DemandFlow, size);
+    if (!p->Preallocflag)
+    {
+        size = (net->Nnodes + 2) * sizeof(Snode);
+        net->Node = (Snode *)realloc(net->Node, size);
+        size = (net->Nnodes + 2) * sizeof(double);
+        hyd->NodeDemand = (double *)realloc(hyd->NodeDemand, size);
+        qual->NodeQual = (double *)realloc(qual->NodeQual, size);
+        hyd->NodeHead = (double *)realloc(hyd->NodeHead, size);
+        hyd->FullDemand = (double *)realloc(hyd->FullDemand, size);
+        hyd->EmitterFlow = (double *)realloc(hyd->EmitterFlow, size);
+        hyd->LeakageFlow = (double *)realloc(hyd->LeakageFlow, size);
+        hyd->DemandFlow = (double *)realloc(hyd->DemandFlow, size);
+    }
 
     // Actions taken when a new Junction is added
     if (nodeType == EN_JUNCTION)
@@ -2484,7 +2529,7 @@ int DLLEXPORT EN_setnodevalue(EN_Project p, int index, int property, double valu
 
     Snode *Node = net->Node;
     Stank *Tank = net->Tank;
-    Scurve *curve;
+    ÿ ur ?? curve;
 
     const int nNodes = net->Nnodes;
     const int nJuncs = net->Njuncs;
@@ -3313,6 +3358,30 @@ int  DLLEXPORT EN_setdemandpattern(EN_Project p, int nodeIndex, int demandIndex,
 
 ********************************************************************/
 
+int DLLEXPORT EN_prealloclinks(EN_Project p, int Nlinks)
+/*----------------------------------------------------------------
+**  Input:   Nlinks = number of links to preallocate memory for
+**  Returns: error code
+**  Purpose: reserves memory in advance for programatically created links
+**----------------------------------------------------------------
+*/
+{
+    p->Preallocflag= 1;
+
+    Network  *net = &p->network;
+    Hydraul  *hyd = &p->hydraul;
+
+    int size = (Nlinks + 1) * sizeof(Slink);
+    net->Link = (Slink *)realloc(net->Link, size);
+
+    size = (Nlinks + 1) * sizeof(double);
+    hyd->LinkFlow = (double *)realloc(hyd->LinkFlow, size);
+    hyd->LinkSetting = (double *)realloc(hyd->LinkSetting, size);
+
+    size = (Nlinks + 1) * sizeof(StatusType);
+    hyd->LinkStatus = (StatusType *)realloc(hyd->LinkStatus, size);
+}
+
 int DLLEXPORT EN_addlink(EN_Project p, const char *id, int linkType,
                          const char *fromNode, const char *toNode, int *index)
 /*----------------------------------------------------------------
@@ -3364,13 +3433,17 @@ int DLLEXPORT EN_addlink(EN_Project p, const char *id, int linkType,
     net->Nlinks++;
     p->parser.MaxLinks = net->Nlinks;
     n = net->Nlinks;
-    size = (n + 1) * sizeof(Slink);
-    net->Link = (Slink *)realloc(net->Link, size);
-    size = (n + 1) * sizeof(double);
-    hyd->LinkFlow = (double *)realloc(hyd->LinkFlow, size);
-    hyd->LinkSetting = (double *)realloc(hyd->LinkSetting, size);
-    size = (n + 1) * sizeof(StatusType);
-    hyd->LinkStatus = (StatusType *)realloc(hyd->LinkStatus, size);
+    
+    if (!p->Preallocflag)
+    {    
+        size = (n + 1) * sizeof(Slink);
+        net->Link = (Slink *)realloc(net->Link, size);
+        size = (n + 1) * sizeof(double);
+        hyd->LinkFlow = (double *)realloc(hyd->LinkFlow, size);
+        hyd->LinkSetting = (double *)realloc(hyd->LinkSetting, size);
+        size = (n + 1) * sizeof(StatusType);
+        hyd->LinkStatus = (StatusType *)realloc(hyd->LinkStatus, size);
+    }
 
     // Set properties for the new link
     link = &net->Link[n];

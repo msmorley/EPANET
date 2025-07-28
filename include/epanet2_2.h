@@ -232,6 +232,13 @@ typedef struct Project *EN_Project;
   to actually delete a project from memory.
   */
   int DLLEXPORT EN_close(EN_Project ph);
+  
+  /**
+  @brief Removes the memory preallocation flag to resume normal memory management
+  @param ph an EPANET project handle.
+  @return an error code
+  */
+  int DLLEXPORT EN_removeprealloc(EN_Project ph);
 
 /*===================================================================
 
@@ -848,6 +855,21 @@ typedef struct Project *EN_Project;
 ===================================================================*/
 
   /**
+  @brief Preallocates memory for a given number of nodes
+  @param ph an EPANET project handle.
+  @param Nnodes the number of nodes to reserve memory for
+  @return an error code.
+  
+  To avoid multiple memory allocation/deallocation cycles when creating a network
+  programatically, this function is provided to reserve a contiguous block of memory 
+  for a given number of nodes in advance. If the preallocated block is exhausted and
+  more nodes are created than reserved then it will fall back to the conventional
+  EPANET memory managment approach.
+  */
+  int DLLEXPORT EN_preallocnodes(EN_Project p, int Nnodes);
+  
+
+  /**
   @brief Adds a new node to a project.
   @param ph an EPANET project handle.
   @param id the ID name of the node to be added.
@@ -1169,6 +1191,20 @@ typedef struct Project *EN_Project;
   Link Functions
 
 ===================================================================*/
+
+  /**
+  @brief Preallocates memory for a given number of links
+  @param ph an EPANET project handle.
+  @param Nlinks the number of links to reserve memory for
+  @return an error code.
+  
+  To avoid multiple memory allocation/deallocation cycles when creating a network
+  programatically, this function is provided to reserve a contiguous block of memory 
+  for a given number of links in advance. If the preallocated block is exhausted and
+  more links are created than reserved then it will fall back to the conventional
+  EPANET memory managment approach.
+  */
+  int DLLEXPORT EN_prealloclinks(EN_Project p, int Nlinks);
 
   /**
   @brief Adds a new link to a project.
