@@ -399,7 +399,9 @@ int DLLEXPORT EN_removeprealloc(EN_Project ph)
 **----------------------------------------------------------------
 */
 {
-    ph->Preallocflag= 0;
+	ph->Preallocflag= 0;
+
+	return 0;
 }
 
 /********************************************************************
@@ -1916,7 +1918,8 @@ int DLLEXPORT EN_preallocnodes(EN_Project p, int Nnodes)
 **----------------------------------------------------------------
 */
 {
-    p->Preallocflag= 1;
+	p->Preallocflag= 1;
+
     Network  *net = &p->network;
     Hydraul  *hyd = &p->hydraul;
     Quality  *qual = &p->quality;
@@ -1932,7 +1935,9 @@ int DLLEXPORT EN_preallocnodes(EN_Project p, int Nnodes)
     hyd->FullDemand = (double *)realloc(hyd->FullDemand, size);
     hyd->EmitterFlow = (double *)realloc(hyd->EmitterFlow, size);
     hyd->LeakageFlow = (double *)realloc(hyd->LeakageFlow, size);
-    hyd->DemandFlow = (double *)realloc(hyd->DemandFlow, size);
+	hyd->DemandFlow = (double *)realloc(hyd->DemandFlow, size);
+
+	return 0;
 }
 
 int DLLEXPORT EN_addnode(EN_Project p, const char *id, int nodeType, int *index)
@@ -2529,7 +2534,7 @@ int DLLEXPORT EN_setnodevalue(EN_Project p, int index, int property, double valu
 
     Snode *Node = net->Node;
     Stank *Tank = net->Tank;
-    ÿ ur ?? curve;
+    Scurve *curve;
 
     const int nNodes = net->Nnodes;
     const int nJuncs = net->Njuncs;
@@ -3379,7 +3384,9 @@ int DLLEXPORT EN_prealloclinks(EN_Project p, int Nlinks)
     hyd->LinkSetting = (double *)realloc(hyd->LinkSetting, size);
 
     size = (Nlinks + 1) * sizeof(StatusType);
-    hyd->LinkStatus = (StatusType *)realloc(hyd->LinkStatus, size);
+	hyd->LinkStatus = (StatusType *)realloc(hyd->LinkStatus, size);
+
+	return 0;
 }
 
 int DLLEXPORT EN_addlink(EN_Project p, const char *id, int linkType,
