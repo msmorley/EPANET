@@ -248,13 +248,13 @@ __Format:__
 
 A line for each pipe subject to leaking that contains:
 - Pipe ID label
-- the area of cracks that leak in sq. mm per 100 units of pipe length (ft or m)
-- the rate at which cracks expand in sq. mm per unit of pressure head (ft or m)
+- the average combined area of leakage-generating cracks per 100 units of pipe length (in ft or m). This area is expressed in units of square mm regardless of the choice of model flow units.
+- the expansion in the average combined area of leakage-generating cracks as a function of the pressure head (in ft or m). This is the derivative of the area with respect to the pressure head, and is expressed in units of sq. mm per unit of modeled pressure head (in ft or m)
 
 __Remarks__
 1. This section is optional.
-2. Leak area is the total area of all cracks assumed to exist per 100 feet (or meters) of pipe.
-3. Experimental values of expansion range between 0 and 0.001 (sq mm)/m depending on pipe material and crack size.
+2. Average combined leak area is the total area of all cracks assumed to exist per 100 feet (or meters) of pipe.
+3. Experimental values of leak area expansion obtained for single cracks range widely depending on pipe material and diameter, and crack length and geometry (e.g. from 0 (sq mm)/m for small diameter steel and iron, to >100 (sq mm)/m for a 200 mm longitudinal slit in a 50 mm diameter class PN6 PVC pipe). Regardless of experimental values obtained for individual cracks, the value of the expansion parameter used here is also directly dependent on the expected density of leakage-generating cracks. For example, 10 identical cracks per 100 m pipe length, with a single crack expansion rate of 0.1 (sq mm)/m, would be modeled using an expansion parameter of 10 * 0.1 (sq mm)/m = 1 (sq mm)/m.
 */
 
 /**
@@ -321,7 +321,7 @@ __Formats:__
 <tr><td><B>PATTERN</B></td><td><I>id</I></td></tr>
 <tr><td><B>DEMAND MULTIPLIER</B></td><td><I>value</I></td></tr>
 <tr><td><B>EMITTER EXPONENT</B></td><td><I>value</I></td></tr>
-<tr><td><B>EMITTER BACKFLOW</B></td><td><B>YES / NO</B></td></tr>
+<tr><td><B>BACKFLOW ALLOWED</B></td><td><B>YES / NO</B></td></tr>
 <tr><td><B>QUALITY</B></td><td><B>NONE / CHEMICAL / AGE / TRACE&nbsp;&nbsp; </B><I>nodeID</I></td></tr>
 <tr><td><B>DIFFUSIVITY</B></td><td><I>value</I></td></tr>
 <tr><td><B>TOLERANCE</B></td><td><I>value</I></td></tr>
@@ -384,7 +384,7 @@ The <b>DEMAND MULTIPLIER</b> is used to adjust the values of baseline demands fo
 
 <b>EMITTER EXPONENT</b> specifies the power to which the pressure at a junction is raised when computing the flow issuing from an emitter. The default is 0.5.
 
-<b>EMITTER BACKFLOW</b> specifies if back flow through an emitter (i.e., flow into the network) is allowed. The default is <b>YES</b>.
+<b>BACKFLOW ALLOWED</b> specifies if back flow through an emitter (i.e., flow into the network) is allowed. The default is <b>YES</b>.
 
 \b QUALITY selects the type of water quality analysis to perform. The choices are <b>NONE, CHEMICAL, AGE</b>, and \b TRACE. In place of \b CHEMICAL the actual name of the chemical can be used followed by its concentration units (e.g., <b>CHLORINE mg/L</b>). If \b TRACE is selected it must be followed by the ID label of the node being traced. The default selection is \b NONE (no water quality analysis).
 
