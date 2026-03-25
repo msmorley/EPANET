@@ -4,7 +4,7 @@
 'Declarations of functions in the EPANET PROGRAMMERs TOOLKIT
 '(EPANET2.DLL) for use with VB.Net.
 
-'Last updated on 04/23/2025
+'Last updated on 03/05/2026
 
 Imports System.Runtime.InteropServices
 Imports System.Text
@@ -350,6 +350,7 @@ Public Const EN_TRUE  = 1   ' boolean true
  Declare Function ENgetcoord Lib "epanet2.dll" (ByVal index As Int32, x As Double, y As Double) As Int32
  Declare Function ENsetcoord Lib "epanet2.dll" (ByVal index As Int32, ByVal x As Double, ByVal y As Double) As Int32
  Declare Function ENgetnodevalues Lib "epanet2.dll" (ByVal property as Int32, values as Any) As Int32
+ Declare Function ENsetnodevalues Lib "epanet2.dll" (ByVal property As Int32, values As Any, badIndex As Int32) As Int32
 
 'Nodal Demand Functions
  Declare Function ENgetdemandmodel Lib "epanet2.dll" (type_ As Int32, pmin As Single, preq As Single, pexp As Single) As Int32
@@ -383,6 +384,7 @@ Public Const EN_TRUE  = 1   ' boolean true
  Declare Function ENsetvertex Lib "epanet2.dll" (ByVal index As Int32, ByVal vertex As Int32, ByVal x As Double, ByVal y As Double) As Int32
  Declare Function ENsetvertices Lib "epanet2.dll" (ByVal index As Int32, xCoords As Any, yCoords As Any, ByVal count As Int32) As Int32
  Declare Function ENgetlinkvalues Lib "epanet2.dll" (ByVal property as Int32, values as Any) As Int32
+ Declare Function ENsetlinkvalues Lib "epanet2.dll" (ByVal property As Int32, values As Any, badIndex As Int32) As Int32
 
 'Pump Functions
  Declare Function ENgetheadcurveindex Lib "epanet2.dll" (ByVal linkIndex As Int32, curveIndex As Int32) As Int32

@@ -483,6 +483,9 @@ namespace EpanetCSharpLibrary
 
         [DllImport(EPANETDLL, EntryPoint = "ENgetnodevalues")]
         public static extern int ENgetnodevalues(int param, ref float values);
+		
+		[DllImport(EPANETDLL, EntryPoint = "ENsetnodevalues")]
+		public static extern int ENsetnodevalues(int property, float values, ref int badIndex);
 
         //Nodal Demand Functions
         [DllImport(EPANETDLL, EntryPoint = "ENgetdemandmodel")]
@@ -571,6 +574,8 @@ namespace EpanetCSharpLibrary
         [DllImport(EPANETDLL, EntryPoint = "ENgetlinkvalues")]
         public static extern int ENgetlinkvalues(int param, ref float values);
 
+		[DllImport(EPANETDLL, EntryPoint = "ENsetlinkvalues")]
+		public static extern int ENsetlinkvalues(int property, float values, ref int badIndex);
 
         //Pump Functions
         [DllImport(EPANETDLL, EntryPoint = "ENgetheadcurveindex")]
